@@ -1,0 +1,45 @@
+Two Memory segments :
+    # Text/Code Segment
+    # Data Segment
+        - Initialized
+            - Read only
+            - Read & Write
+        - Uninitialized (bss - Block started by Symbol)
+            - Read only
+            - Read & Write
+        - STACK
+        - HEAP
+
+
+X---------------------------------------X
+|             ....  .. . .              |
+|                                       |   -> Command line arguments, Environment variable
+|_______________________________________|
+|                                       |
+|                                       |
+|            STACK                      |
+|                                       |
+|---------------------------------------|
+|                  |                    |
+|                  v                    |
+|                                       |
+|                                       |
+|                                       |
+|                  ^                    |
+|                  |                    |
+|---------------------------------------|
+|                                       |
+|              HEAP                     |
+|                                       |
+|_______________________________________|
+|                                       |   ->Uninitialized Global, Static (both local and global) constants i.e constants
+|     Uninitialized Data (bss)          |       (read only) & (read & write)
+|     (Block started by Symbol)         |
+|_______________________________________|
+|                                       |   ->Global, Static, Extern etc const
+|     Initialized Data                  |       (read only) & (read & write)
+|_______________________________________|
+|                                       |
+|     Text/Code Segment                 |   ->Contains machine code of compiled program
+|                                       |
+X---------------------------------------X
