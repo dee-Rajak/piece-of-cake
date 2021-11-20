@@ -4,12 +4,11 @@
 */
 
 /*
-8.  Input numbers 1 – 9 in any order and display the corresponding cardinality
-    e.g. 2 (Input), Second (output)
+4.  Input 8 numbers and display/output the result by 2X2 matrix manipulation.
 */
 
 /*
-    NOTE : This program is not that tough, game of char-array
+    NOTE : This program shows the real beauty of shared-memory and buffer concept.
 */
 
 #include <stdio.h>
@@ -17,7 +16,7 @@
 #include <stdlib.h>
 #include <unistd.h>     //this is linux-specific
 #include <sys/wait.h>   //not neccessary untill you use wait()
-#define SIZE 15
+#define SIZE 8
 
 int main(int argc, char const *argv[])
 {
@@ -48,10 +47,13 @@ int main(int argc, char const *argv[])
         //keep the reaading end close
         close(file[0]);
 
-        char numArr[SIZE];
-        printf("You need to enter numbers (1-9) in any order (e.g., 453465).\n");
-        printf("Enter the number : ");
-        scanf("%s", numArr);
+        int numArr[SIZE];
+        printf("You need to enter 8 numbers to create two-matrix of size 2x2.\n");
+        for (int i = 0; i < SIZE; i++)
+        {
+            printf("Enter number %d : ", i+1);
+            scanf("%d", &numArr[i]);
+        }
         
         //Writing in file and checking write-time-error
         if (write(file[1], &numArr, sizeof(numArr)) == -1){
@@ -65,47 +67,38 @@ int main(int argc, char const *argv[])
         //keep the writing end close
         close(file[1]);
 
-        char numArr[SIZE];
+        int numArr[2][2];
 
-        //Reading the file and checking read-time-error
-        if(read(file[0], &numArr, sizeof(numArr)) == -1){
+        //Reading in file and checking read-time-error
+        if(read(file[0], &numArr, sizeof(numArr)) == -1){       //getting first 4 chunk of data from pipe
             printf("Error ocurred while Reading.\n");
             return 5;
         }
 
-        //process cardinality
-        for (int i = 0; i < strlen(numArr); i++)
+        printf("----Matrix 1----\n");
+        for (int i = 0; i < 2; i++)
         {
-            switch (numArr[i])
+            for (int j = 0; j < 2; j++)
             {
-            case '1':
-                printf("First\n");
-                break;
-            case '2':
-                printf("Second\n");
-                break;
-            case '3':
-                printf("Third\n");
-                break;
-            case '4':
-                printf("Fourth\n");
-                break;
-            case '5':
-                printf("Fifth\n");
-                break;
-            case '6':
-                printf("Sixth\n");
-                break;
-            case '7':
-                printf("Seventh\n");
-                break;
-            case '8':
-                printf("Eighth\n");
-                break;
-            case '9':
-                printf("Nineth\n");
-                break;
-            }   
+                printf("%5d", numArr[i][j]);
+            }
+            printf("\n");
+        }
+
+        //Reading in file and checking read-time-error
+        if(read(file[0], &numArr, sizeof(numArr)) == -1){       //getting remaining 4 chunk of data from pipe
+            printf("Error ocurred while Reading.\n");
+            return 6;
+        }
+
+        printf("----Matrix 2----\n");
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                printf("%5d", numArr[i][j]);
+            }
+            printf("\n");
         }
         
         //close the reading end

@@ -4,20 +4,22 @@
 */
 
 /*
-8.  Input numbers 1 – 9 in any order and display the corresponding cardinality
-    e.g. 2 (Input), Second (output)
+5.  Enter/Input 10 numbers and display the numbers in ascending order.
 */
 
 /*
-    NOTE : This program is not that tough, game of char-array
-*/
+    Note : Really nothing much to do here, if you have done the previous programs,
+            then all you do here is sort an array
+ */
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>     //this is linux-specific
 #include <sys/wait.h>   //not neccessary untill you use wait()
-#define SIZE 15
+#define SIZE 10
+
+void insertionSort(int arr[], int n);
 
 int main(int argc, char const *argv[])
 {
@@ -45,16 +47,19 @@ int main(int argc, char const *argv[])
     }
 
     if (id == 0){
-        //keep the reaading end close
+        //keep the reading end close
         close(file[0]);
 
-        char numArr[SIZE];
-        printf("You need to enter numbers (1-9) in any order (e.g., 453465).\n");
-        printf("Enter the number : ");
-        scanf("%s", numArr);
-        
+        int aArr[SIZE];
+
+        printf("You have to enter %d numbers.\n", SIZE);
+        for(int i = 0; i < SIZE; i++){
+            printf("Input a number -> ");
+            scanf("%d", &aArr[i]);
+        }
+
         //Writing in file and checking write-time-error
-        if (write(file[1], &numArr, sizeof(numArr)) == -1){
+        if (write(file[1], &aArr, sizeof(aArr)) == -1){
             printf("Error ocurred while Writing.\n");
             return 4;
         }
@@ -65,52 +70,40 @@ int main(int argc, char const *argv[])
         //keep the writing end close
         close(file[1]);
 
-        char numArr[SIZE];
+        int bArr[SIZE];
 
         //Reading the file and checking read-time-error
-        if(read(file[0], &numArr, sizeof(numArr)) == -1){
+        if(read(file[0], &bArr, sizeof(bArr)) == -1){
             printf("Error ocurred while Reading.\n");
             return 5;
         }
 
-        //process cardinality
-        for (int i = 0; i < strlen(numArr); i++)
-        {
-            switch (numArr[i])
-            {
-            case '1':
-                printf("First\n");
-                break;
-            case '2':
-                printf("Second\n");
-                break;
-            case '3':
-                printf("Third\n");
-                break;
-            case '4':
-                printf("Fourth\n");
-                break;
-            case '5':
-                printf("Fifth\n");
-                break;
-            case '6':
-                printf("Sixth\n");
-                break;
-            case '7':
-                printf("Seventh\n");
-                break;
-            case '8':
-                printf("Eighth\n");
-                break;
-            case '9':
-                printf("Nineth\n");
-                break;
-            }   
+        //sort it in ascending order
+        insertionSort(bArr, SIZE);
+
+        //print array
+        for(int i = 0; i < SIZE; i++){
+            printf("%d\t", bArr[i]);
         }
-        
+        printf("\n");
+
         //close the reading end
         close(file[0]);
     }
-
     return 0;
+}
+
+void insertionSort(int arr[], int n)
+{
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+ 
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
 }

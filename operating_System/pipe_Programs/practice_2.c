@@ -9,17 +9,17 @@ int main(int argc, char const *argv[]) {
     int n;
 
     if (id == 0) {
-        n = 1;
-    } else {
-        wait(NULL);
         n = 6;
+    } else {
+        // wait(NULL);
+        n = 1;
     }
     int i;
     for ( i = n; i < n + 5; i++) {
         printf("%d ", i);
         fflush(stdout);
     }
-    if (id != 0)
-        printf("\n");
+    // if (id != 0)
+        // printf("\n");
     return 0;
 }
